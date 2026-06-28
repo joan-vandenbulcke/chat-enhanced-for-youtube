@@ -4,7 +4,7 @@
  * We deliberately avoid Chrome's native _locales system: it picks the browser
  * UI language and can't be changed by the user. Here the user chooses the
  * language from a dropdown; the choice is stored in chrome.storage.sync and
- * defaults to the browser language, falling back to English.
+ * defaults to English until the user picks one.
  */
 
 export type Lang = 'en' | 'fr' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'ja' | 'ko'
@@ -153,8 +153,8 @@ function isLang(value: string): value is Lang {
 export async function getLang(): Promise<Lang> {
   const { lang } = await chrome.storage.sync.get('lang')
   if (typeof lang === 'string' && isLang(lang)) return lang
-  const browser = navigator.language.slice(0, 2)
-  return isLang(browser) ? browser : 'en'
+  // Default to English until the user explicitly picks a language.
+  return 'en'
 }
 
 export async function setLang(lang: Lang): Promise<void> {
