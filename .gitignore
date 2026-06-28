@@ -1,0 +1,17 @@
+node_modules
+.DS_Store
+dist
+releases
+
+# Mémo perso, non versionné
+RELEASE-PERSO.md
+dist-ssr
+*.local
+.env
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json

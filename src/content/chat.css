@@ -1,0 +1,233 @@
+/*
+ * Chat Enhanced for YouTube — Twitch-like restyle of the YouTube Live chat.
+ *
+ * Strategy: target the stable custom-element tags (yt-live-chat-*-renderer)
+ * and the stable internal IDs (#author-name, #message, #content...), NEVER the
+ * generated utility classes which YouTube reshuffles between releases.
+ *
+ * Almost everything here is pure CSS so it survives YouTube's DOM node
+ * recycling for free. The only thing that needs JS is per-author coloring
+ * (see chat.ts), which sets the `--yci-author` custom property.
+ */
+
+:root {
+  /* --- Light theme (YouTube default) --- */
+  --yci-bg: #ffffff; /* base row */
+  --yci-bg-alt: #f1f1f1; /* every other row, light gray */
+  --yci-text: #0f0f0f;
+  --yci-muted: #606060;
+  --yci-hover: rgba(0, 0, 0, 0.05);
+  /* Author color is composed from a per-name hue (set by chat.ts) plus a
+     theme-dependent saturation/lightness so names stay legible on any bg. */
+  --yci-author-sat: 72%; /* vivid, distinct hues */
+  --yci-author-light: 38%; /* darker on white */
+  /* Role colors override the per-name hue (legible on white) */
+  --yci-mod-color: #1565c0; /* moderator: blue */
+  --yci-member-color: #0f9d58; /* member/subscriber: green */
+  /* Defaults used when "colored usernames" is OFF (YouTube-like) */
+  --yci-default-name: #0f0f0fb3; /* non-sub (dark-ish on white) */
+  --yci-default-sub: #2ba640; /* sub */
+  --yci-badge-size: 20px;
+
+  --yci-font: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --yci-font-size: 14px;
+  --yci-line-height: 1.45;
+  /* per-message spacing */
+  --yci-row-pad-y: 6px;
+  --yci-row-pad-x: 12px;
+}
+
+/* --- Dark theme (YouTube sets `dark` on <html> in the chat frame) --- */
+html[dark] {
+  --yci-bg: #18181b;
+  --yci-bg-alt: #0e0e10;
+  --yci-text: #efeff1;
+  --yci-muted: #adadb8;
+  --yci-hover: rgba(255, 255, 255, 0.06);
+  --yci-author-sat: 82%; /* vivid, distinct hues */
+  --yci-author-light: 65%; /* lighter on dark */
+  --yci-mod-color: #4fc3f7; /* moderator: light blue */
+  --yci-member-color: #5cdb6b; /* member/subscriber: green */
+  --yci-default-name: #ffffffb3; /* non-sub */
+  --yci-default-sub: #2ba640; /* sub */
+}
+
+/* ---- Base surface -------------------------------------------------------- */
+
+yt-live-chat-renderer,
+yt-live-chat-renderer #contents.yt-live-chat-renderer,
+#item-scroller,
+#items.yt-live-chat-item-list-renderer {
+  background-color: var(--yci-bg) !important;
+}
+
+yt-live-chat-renderer {
+  font-size: var(--yci-font-size) !important;
+  font-family: var(--yci-font) !important;
+}
+
+/* Make the font/size cascade everywhere inside chat */
+yt-live-chat-renderer * {
+  font-family: var(--yci-font) !important;
+}
+
+/* ---- Compact, dense message rows ---------------------------------------- */
+
+yt-live-chat-text-message-renderer {
+  padding: var(--yci-row-pad-y) var(--yci-row-pad-x) !important;
+  margin: 0 !important;
+  line-height: var(--yci-line-height) !important;
+}
+
+/* Zebra striping: parity is set in JS (see chat.ts) so it stays stable when
+   YouTube drops old messages off the top, instead of shimmering like
+   position-based :nth-child would. */
+yt-live-chat-text-message-renderer[yci-row='a'] {
+  background-color: var(--yci-bg) !important;
+}
+
+yt-live-chat-text-message-renderer[yci-row='b'] {
+  background-color: var(--yci-bg-alt) !important;
+}
+
+/* Zebra off: flatten both rows to the base background. */
+html[data-yci-no-zebra] yt-live-chat-text-message-renderer[yci-row='b'] {
+  background-color: var(--yci-bg) !important;
+}
+
+yt-live-chat-text-message-renderer:hover {
+  background-color: var(--yci-hover) !important;
+}
+
+/* The inner content wrapper: keep author + message on one flowing line */
+yt-live-chat-text-message-renderer #content {
+  display: inline !important;
+  line-height: var(--yci-line-height) !important;
+}
+
+yt-live-chat-text-message-renderer #message {
+  display: inline !important;
+  color: var(--yci-text) !important;
+  font-size: var(--yci-font-size) !important;
+}
+
+/* ---- Hide avatars ------------------------------------------------------- */
+
+html:not([data-yci-show-avatars]) yt-live-chat-text-message-renderer #author-photo,
+html:not([data-yci-show-avatars]) yt-live-chat-paid-message-renderer #author-photo {
+  display: none !important;
+}
+
+/* ---- Author name: Twitch-style bold colored handle + colon -------------- */
+
+yt-live-chat-text-message-renderer #author-name {
+  font-weight: 700 !important;
+  font-size: var(--yci-font-size) !important;
+  /* --yci-author-hue is injected per-message by chat.ts; compose with the
+     theme-aware saturation/lightness so the name reads on light OR dark. */
+  color: hsl(var(--yci-author-hue, 0) var(--yci-author-sat) var(--yci-author-light)) !important;
+}
+
+/* Role-based colors override the per-name hue (Twitch style).
+   Specificity (1,1,1) beats the hashed-color rule (1,0,1); the no-colors
+   rule (1,1,2) still beats these, so disabling colors also neutralizes roles. */
+yt-live-chat-text-message-renderer[author-type='moderator'] #author-name {
+  color: var(--yci-mod-color) !important;
+}
+
+yt-live-chat-text-message-renderer[author-type='member'] #author-name {
+  color: var(--yci-member-color) !important;
+  text-decoration: underline !important;
+}
+
+/* Optional: underline every username (helps separate name from message,
+   especially with colors off). Members are already underlined. */
+html[data-yci-underline] yt-live-chat-text-message-renderer #author-name {
+  text-decoration: underline !important;
+}
+
+/* Mentions: @name chips. Background = text color, text = background color, so
+   it auto-inverts per theme (white chip + dark text on dark, and vice versa).
+   chat.ts wraps mentions in .yci-mention; styling is gated by the setting. */
+html[data-yci-mentions] yt-live-chat-text-message-renderer .yci-mention {
+  background-color: var(--yci-text) !important;
+  color: var(--yci-bg) !important;
+  border-radius: 4px !important;
+  padding: 0 5px !important;
+  font-weight: 600 !important;
+}
+
+/* Author colors off: YouTube-like defaults (non-sub neutral, sub green).
+   The member rule below has higher specificity so it wins over the first. */
+html[data-yci-no-colors] yt-live-chat-text-message-renderer #author-name {
+  color: var(--yci-default-name) !important;
+}
+
+html[data-yci-no-colors] yt-live-chat-text-message-renderer[author-type='member'] #author-name {
+  color: var(--yci-default-sub) !important;
+}
+
+/* No colon — just a gap between the name+badges chip and the message. */
+yt-live-chat-text-message-renderer yt-live-chat-author-chip {
+  margin-right: 6px !important;
+}
+
+/* ---- Timestamps: hidden for a clean Twitch-like look -------------------- */
+
+yt-live-chat-text-message-renderer #timestamp {
+  display: none !important;
+}
+
+/* ---- Badges: keep moderator/owner/member chips at a readable size ------- */
+
+/* Space before each badge (after the name); colon hugs the last badge. */
+yt-live-chat-author-badge-renderer {
+  margin: 0 0 0 4px !important;
+}
+
+yt-live-chat-author-badge-renderer #image,
+yt-live-chat-author-badge-renderer img {
+  width: var(--yci-badge-size) !important;
+  height: var(--yci-badge-size) !important;
+}
+
+/* Optional: hide member/subscriber badges (moderator/owner stay). */
+html[data-yci-hide-badges] yt-live-chat-author-badge-renderer[type='member'] {
+  display: none !important;
+}
+
+/* ---- Remove noise: "Welcome to live chat", reminders, polls promos ------- */
+
+html:not([data-yci-show-engagement]) yt-live-chat-viewer-engagement-message-renderer,
+html:not([data-yci-show-engagement]) yt-live-chat-mode-change-message-renderer,
+html:not([data-yci-show-engagement])
+  yt-live-chat-banner-renderer
+  #banner.yt-live-chat-banner-renderer[is-engagement-panel] {
+  display: none !important;
+}
+
+/* ---- Superchats: keep the color, kill the bulky card -------------------- */
+
+yt-live-chat-paid-message-renderer {
+  margin: var(--yci-row-pad-y) 4px !important;
+  border-radius: 4px !important;
+}
+
+yt-live-chat-paid-message-renderer #header {
+  padding: 2px 8px !important;
+}
+
+yt-live-chat-paid-message-renderer #content {
+  padding: 2px 8px !important;
+}
+
+/* ---- Scrollbar to match the dark surface -------------------------------- */
+
+#item-scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+#item-scroller::-webkit-scrollbar-thumb {
+  background: #3a3a3d;
+  border-radius: 4px;
+}
