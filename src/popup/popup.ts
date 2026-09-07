@@ -1,4 +1,10 @@
-import { DEFAULTS, getSettings, setSetting, type Settings } from '../settings'
+import {
+  DEFAULTS,
+  getSettings,
+  setSetting,
+  type MentionMode,
+  type Settings,
+} from '../settings'
 import { LANGS, MESSAGES, getLang, setLang, type Lang, type MsgKey } from '../translations'
 
 const subtitle = document.getElementById('subtitle') as HTMLElement
@@ -8,11 +14,20 @@ const container = document.getElementById('options') as HTMLElement
 
 let currentLang: Lang
 
+const MENTION_MODES: ReadonlyArray<{ value: MentionMode; label: MsgKey }> = [
+  { value: 'mine', label: 'mentionsMine' },
+  { value: 'all', label: 'mentionsAll' },
+  { value: 'off', label: 'mentionsOff' },
+]
+
 function t(key: MsgKey): string {
   return MESSAGES[currentLang][key] ?? MESSAGES.en[key]
 }
 
-function renderRow(key: keyof Settings, checked: boolean): HTMLElement {
+function renderToggleRow(
+  key: Exclude<keyof Settings, 'mentionMode'>,
+  checked: boolean,
+): HTMLElement {
   const row = document.createElement('div')
   row.className = 'row'
 
@@ -38,6 +53,29 @@ function renderRow(key: keyof Settings, checked: boolean): HTMLElement {
   return row
 }
 
+function renderMentionRow(value: MentionMode): HTMLElement {
+  const row = document.createElement('div')
+  row.className = 'row'
+
+  const label = document.createElement('label')
+  label.htmlFor = 'opt-mentionMode'
+  label.id = 'label-mentionMode'
+
+  const select = document.createElement('select')
+  select.id = 'opt-mentionMode'
+  for (const mode of MENTION_MODES) {
+    const option = document.createElement('option')
+    option.value = mode.value
+    option.dataset.msg = mode.label
+    select.appendChild(option)
+  }
+  select.value = value
+  select.addEventListener('change', () => setSetting('mentionMode', select.value as MentionMode))
+
+  row.append(label, select)
+  return row
+}
+
 /** (Re)apply all visible strings for the current language. */
 function applyTranslations(): void {
   document.documentElement.lang = currentLang
@@ -47,6 +85,9 @@ function applyTranslations(): void {
     const el = document.getElementById(`label-${key}`)
     if (el) el.textContent = t(key as MsgKey)
   }
+  document.querySelectorAll<HTMLOptionElement>('option[data-msg]').forEach((option) => {
+    option.textContent = t(option.dataset.msg as MsgKey)
+  })
 }
 
 async function init(): Promise<void> {
@@ -67,7 +108,11 @@ async function init(): Promise<void> {
   })
 
   for (const key of Object.keys(DEFAULTS) as Array<keyof Settings>) {
-    container.appendChild(renderRow(key, settings[key]))
+    if (key === 'mentionMode') {
+      container.appendChild(renderMentionRow(settings.mentionMode))
+    } else {
+      container.appendChild(renderToggleRow(key, settings[key]))
+    }
   }
   applyTranslations()
 }

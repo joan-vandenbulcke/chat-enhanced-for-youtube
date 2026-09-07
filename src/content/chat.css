@@ -146,9 +146,9 @@ html[data-yci-underline] yt-live-chat-text-message-renderer #author-name {
   text-decoration: underline !important;
 }
 
-/* Mentions: @name chips. Background = text color, text = background color, so
-   it auto-inverts per theme (white chip + dark text on dark, and vice versa).
-   chat.ts wraps mentions in .yci-mention; styling is gated by the setting. */
+/* Selected mentions. Background = text color, text = background color, so the
+   chip auto-inverts per theme. chat.ts wraps either the current user's @handle
+   or every @handle, depending on the setting. */
 html[data-yci-mentions] yt-live-chat-text-message-renderer .yci-mention {
   background-color: var(--yci-text) !important;
   color: var(--yci-bg) !important;

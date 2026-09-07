@@ -8,12 +8,14 @@
  * (async) storage read completes.
  */
 
+export type MentionMode = 'mine' | 'all' | 'off'
+
 export interface Settings {
   enabled: boolean
   zebra: boolean
   colorAuthors: boolean
   underlineNames: boolean
-  highlightMentions: boolean
+  mentionMode: MentionMode
   hideAvatars: boolean
   hideMemberBadges: boolean
   hideEngagement: boolean
@@ -24,15 +26,23 @@ export const DEFAULTS: Settings = {
   zebra: true,
   colorAuthors: true,
   underlineNames: false,
-  highlightMentions: true,
+  mentionMode: 'mine',
   hideAvatars: true,
   hideMemberBadges: false,
   hideEngagement: true,
 }
 
 export async function getSettings(): Promise<Settings> {
-  const stored = await chrome.storage.sync.get(DEFAULTS)
-  return stored as Settings
+  const stored = await chrome.storage.sync.get([...Object.keys(DEFAULTS), 'highlightMentions'])
+  const legacyMentionMode = stored.highlightMentions === false ? 'off' : DEFAULTS.mentionMode
+  return {
+    ...DEFAULTS,
+    ...stored,
+    mentionMode:
+      stored.mentionMode === 'mine' || stored.mentionMode === 'all' || stored.mentionMode === 'off'
+        ? stored.mentionMode
+        : legacyMentionMode,
+  } as Settings
 }
 
 export async function setSetting<K extends keyof Settings>(key: K, value: Settings[K]): Promise<void> {
@@ -46,7 +56,7 @@ export function applyToRoot(s: Settings, root: HTMLElement): void {
   root.toggleAttribute('data-yci-no-zebra', !s.zebra)
   root.toggleAttribute('data-yci-no-colors', !s.colorAuthors)
   root.toggleAttribute('data-yci-underline', s.underlineNames)
-  root.toggleAttribute('data-yci-mentions', s.highlightMentions)
+  root.toggleAttribute('data-yci-mentions', s.mentionMode !== 'off')
   root.toggleAttribute('data-yci-show-avatars', !s.hideAvatars)
   root.toggleAttribute('data-yci-hide-badges', s.hideMemberBadges)
   root.toggleAttribute('data-yci-show-engagement', !s.hideEngagement)
