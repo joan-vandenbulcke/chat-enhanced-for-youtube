@@ -9,9 +9,11 @@
  */
 
 export type MentionMode = 'mine' | 'all' | 'off'
+export type Density = 'comfortable' | 'compact' | 'ultra'
 
 export interface Settings {
   enabled: boolean
+  density: Density
   zebra: boolean
   colorAuthors: boolean
   underlineNames: boolean
@@ -23,6 +25,7 @@ export interface Settings {
 
 export const DEFAULTS: Settings = {
   enabled: true,
+  density: 'compact',
   zebra: true,
   colorAuthors: true,
   underlineNames: false,
@@ -38,6 +41,10 @@ export async function getSettings(): Promise<Settings> {
   return {
     ...DEFAULTS,
     ...stored,
+    density:
+      stored.density === 'comfortable' || stored.density === 'compact' || stored.density === 'ultra'
+        ? stored.density
+        : DEFAULTS.density,
     mentionMode:
       stored.mentionMode === 'mine' || stored.mentionMode === 'all' || stored.mentionMode === 'off'
         ? stored.mentionMode
@@ -53,6 +60,7 @@ export async function setSetting<K extends keyof Settings>(key: K, value: Settin
  * The global `enabled` switch is handled separately (it injects/removes the
  * whole stylesheet), not as an attribute. */
 export function applyToRoot(s: Settings, root: HTMLElement): void {
+  root.dataset.yciDensity = s.density
   root.toggleAttribute('data-yci-no-zebra', !s.zebra)
   root.toggleAttribute('data-yci-no-colors', !s.colorAuthors)
   root.toggleAttribute('data-yci-underline', s.underlineNames)

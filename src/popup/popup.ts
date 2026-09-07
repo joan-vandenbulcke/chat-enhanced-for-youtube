@@ -2,6 +2,7 @@ import {
   DEFAULTS,
   getSettings,
   setSetting,
+  type Density,
   type MentionMode,
   type Settings,
 } from '../settings'
@@ -20,12 +21,18 @@ const MENTION_MODES: ReadonlyArray<{ value: MentionMode; label: MsgKey }> = [
   { value: 'off', label: 'mentionsOff' },
 ]
 
+const DENSITIES: ReadonlyArray<{ value: Density; label: MsgKey }> = [
+  { value: 'comfortable', label: 'densityComfortable' },
+  { value: 'compact', label: 'densityCompact' },
+  { value: 'ultra', label: 'densityUltra' },
+]
+
 function t(key: MsgKey): string {
   return MESSAGES[currentLang][key] ?? MESSAGES.en[key]
 }
 
 function renderToggleRow(
-  key: Exclude<keyof Settings, 'mentionMode'>,
+  key: Exclude<keyof Settings, 'density' | 'mentionMode'>,
   checked: boolean,
 ): HTMLElement {
   const row = document.createElement('div')
@@ -50,6 +57,29 @@ function renderToggleRow(
 
   sw.append(input, track)
   row.append(label, sw)
+  return row
+}
+
+function renderDensityRow(value: Density): HTMLElement {
+  const row = document.createElement('div')
+  row.className = 'row'
+
+  const label = document.createElement('label')
+  label.htmlFor = 'opt-density'
+  label.id = 'label-density'
+
+  const select = document.createElement('select')
+  select.id = 'opt-density'
+  for (const density of DENSITIES) {
+    const option = document.createElement('option')
+    option.value = density.value
+    option.dataset.msg = density.label
+    select.appendChild(option)
+  }
+  select.value = value
+  select.addEventListener('change', () => setSetting('density', select.value as Density))
+
+  row.append(label, select)
   return row
 }
 
@@ -108,7 +138,9 @@ async function init(): Promise<void> {
   })
 
   for (const key of Object.keys(DEFAULTS) as Array<keyof Settings>) {
-    if (key === 'mentionMode') {
+    if (key === 'density') {
+      container.appendChild(renderDensityRow(settings.density))
+    } else if (key === 'mentionMode') {
       container.appendChild(renderMentionRow(settings.mentionMode))
     } else {
       container.appendChild(renderToggleRow(key, settings[key]))

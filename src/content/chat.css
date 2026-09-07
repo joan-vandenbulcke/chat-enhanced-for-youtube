@@ -28,6 +28,25 @@
   /* per-message spacing */
   --yci-row-pad-y: 6px;
   --yci-row-pad-x: 12px;
+  --yci-scrollbar-width: 8px;
+}
+
+html[data-yci-density='comfortable'] {
+  --yci-font-size: 15px;
+  --yci-line-height: 1.5;
+  --yci-row-pad-y: 8px;
+  --yci-row-pad-x: 14px;
+  --yci-badge-size: 22px;
+  --yci-scrollbar-width: 10px;
+}
+
+html[data-yci-density='ultra'] {
+  --yci-font-size: 13px;
+  --yci-line-height: 1.3;
+  --yci-row-pad-y: 3px;
+  --yci-row-pad-x: 8px;
+  --yci-badge-size: 16px;
+  --yci-scrollbar-width: 6px;
 }
 
 /* --- Dark theme (YouTube sets `dark` on <html> in the chat frame) --- */
@@ -193,7 +212,7 @@ yt-live-chat-paid-message-renderer #content {
 /* ---- Scrollbar to match the dark surface -------------------------------- */
 
 #item-scroller::-webkit-scrollbar {
-  width: 8px;
+  width: var(--yci-scrollbar-width);
 }
 
 #item-scroller::-webkit-scrollbar-thumb {
