@@ -1,4 +1,4 @@
-# Chat Enhanced for YouTube
+# Chat Restyler for YouTube
 
 A small Chrome (Manifest V3) extension that restyles the **YouTube Live chat** to
 make it easier to read: compact, dark, dense, no avatars, colored usernames, less

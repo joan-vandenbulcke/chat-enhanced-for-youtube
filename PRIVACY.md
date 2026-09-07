@@ -2,7 +2,7 @@
 
 _Last updated: 2026-09-07_
 
-**Chat Enhanced for YouTube** ("the extension") is a browser extension that
+**Chat Restyler for YouTube** ("the extension") is a browser extension that
 restyles the YouTube Live chat. This policy explains exactly what the extension
 does and does not do with your data.
 

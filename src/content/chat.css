@@ -1,5 +1,5 @@
 /*
- * Chat Enhanced for YouTube — Twitch-like restyle of the YouTube Live chat.
+ * Chat Restyler for YouTube — Twitch-like restyle of the YouTube Live chat.
  *
  * Strategy: target the stable custom-element tags (yt-live-chat-*-renderer)
  * and the stable internal IDs (#author-name, #message, #content...), NEVER the

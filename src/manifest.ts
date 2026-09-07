@@ -3,7 +3,7 @@ import pkg from "../package.json";
 
 export default defineManifest({
   manifest_version: 3,
-  name: "Chat Enhanced for YouTube",
+  name: "Chat Restyler for YouTube",
   // Single source of truth: bumped by release-please in package.json.
   version: pkg.version,
   description: "Makes the YouTube Live chat look and read better. Not affiliated with YouTube or Google.",
@@ -15,7 +15,7 @@ export default defineManifest({
   },
   permissions: ["storage"],
   action: {
-    default_title: "Chat Enhanced for YouTube",
+    default_title: "Chat Restyler for YouTube",
     default_popup: "src/popup/popup.html",
     default_icon: {
       "16": "icons/icon16.png",

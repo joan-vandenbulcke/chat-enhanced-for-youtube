@@ -1,5 +1,5 @@
 /*
- * Chat Enhanced for YouTube — the only thing CSS can't do: per-author coloring.
+ * Chat Restyler for YouTube — the only thing CSS can't do: per-author coloring.
  *
  * We assign each author an unused class from the Tailwind CSS color palette.
  * We re-apply it when YouTube adds or

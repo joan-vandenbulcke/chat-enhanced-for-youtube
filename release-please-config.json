@@ -3,7 +3,7 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "package-name": "chat-enhanced-for-youtube",
+      "package-name": "chat-restyler-for-youtube",
       "changelog-path": "CHANGELOG.md",
       "include-component-in-tag": false
     }
