@@ -65,28 +65,6 @@ no server. The only thing it stores is your own settings (which toggles are on,
 and your chosen language) via the browser's sync storage. Full details in
 [PRIVACY.md](PRIVACY.md).
 
-## Develop
-
-```bash
-npm install
-npm run dev      # HMR build into dist/ via @crxjs/vite-plugin
-# or
-npm run build    # production build into dist/
-```
-
-## Load in Chrome
-
-1. `npm run build`
-2. Go to `chrome://extensions`, enable **Developer mode**.
-3. **Load unpacked** → select the `dist/` folder.
-4. Open any YouTube live stream and pop out / open the chat.
-
-## Roadmap
-
-- V1 (done): CSS restyle + author coloring + light/dark theme awareness.
-- V2 (done): control-panel popup with per-feature toggles.
-- Next: per-feature fine-tuning (font size slider, zebra contrast), keyword highlights.
-
 ## License
 
 Released under the MIT License — see [LICENSE](LICENSE).
