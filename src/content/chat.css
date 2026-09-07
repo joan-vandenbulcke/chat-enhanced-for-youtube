@@ -6,8 +6,8 @@
  * generated utility classes which YouTube reshuffles between releases.
  *
  * Almost everything here is pure CSS so it survives YouTube's DOM node
- * recycling for free. The only thing that needs JS is per-author coloring
- * (see chat.ts), which sets the `--yci-author` custom property.
+ * recycling for free. The only thing that needs JS is assigning each author
+ * one of the classes declared in name-colors.css (see chat.ts).
  */
 
 :root {
@@ -17,16 +17,9 @@
   --yci-text: #0f0f0f;
   --yci-muted: #606060;
   --yci-hover: rgba(0, 0, 0, 0.05);
-  /* Author color is composed from a per-name hue (set by chat.ts) plus a
-     theme-dependent saturation/lightness so names stay legible on any bg. */
-  --yci-author-sat: 72%; /* vivid, distinct hues */
-  --yci-author-light: 38%; /* darker on white */
-  /* Role colors override the per-name hue (legible on white) */
-  --yci-mod-color: #1565c0; /* moderator: blue */
-  --yci-member-color: #0f9d58; /* member/subscriber: green */
-  /* Defaults used when "colored usernames" is OFF (YouTube-like) */
-  --yci-default-name: #0f0f0fb3; /* non-sub (dark-ish on white) */
-  --yci-default-sub: #2ba640; /* sub */
+  --yci-author-fallback: oklch(63.7% 0.237 25.331); /* Tailwind red-500 */
+  /* Neutral fallback used when "colored usernames" is off. */
+  --yci-default-name: #0f0f0fb3;
   --yci-badge-size: 20px;
 
   --yci-font: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -44,12 +37,7 @@ html[dark] {
   --yci-text: #efeff1;
   --yci-muted: #adadb8;
   --yci-hover: rgba(255, 255, 255, 0.06);
-  --yci-author-sat: 82%; /* vivid, distinct hues */
-  --yci-author-light: 65%; /* lighter on dark */
-  --yci-mod-color: #4fc3f7; /* moderator: light blue */
-  --yci-member-color: #5cdb6b; /* member/subscriber: green */
-  --yci-default-name: #ffffffb3; /* non-sub */
-  --yci-default-sub: #2ba640; /* sub */
+  --yci-default-name: #ffffffb3;
 }
 
 /* ---- Base surface -------------------------------------------------------- */
@@ -123,25 +111,11 @@ html:not([data-yci-show-avatars]) yt-live-chat-paid-message-renderer #author-pho
 yt-live-chat-text-message-renderer #author-name {
   font-weight: 700 !important;
   font-size: var(--yci-font-size) !important;
-  /* --yci-author-hue is injected per-message by chat.ts; compose with the
-     theme-aware saturation/lightness so the name reads on light OR dark. */
-  color: hsl(var(--yci-author-hue, 0) var(--yci-author-sat) var(--yci-author-light)) !important;
-}
-
-/* Role-based colors override the per-name hue (Twitch style).
-   Specificity (1,1,1) beats the hashed-color rule (1,0,1); the no-colors
-   rule (1,1,2) still beats these, so disabling colors also neutralizes roles. */
-yt-live-chat-text-message-renderer[author-type='moderator'] #author-name {
-  color: var(--yci-mod-color) !important;
-}
-
-yt-live-chat-text-message-renderer[author-type='member'] #author-name {
-  color: var(--yci-member-color) !important;
-  text-decoration: underline !important;
+  color: var(--yt-name-color, var(--yci-author-fallback)) !important;
 }
 
 /* Optional: underline every username (helps separate name from message,
-   especially with colors off). Members are already underlined. */
+   especially with colors off). */
 html[data-yci-underline] yt-live-chat-text-message-renderer #author-name {
   text-decoration: underline !important;
 }
@@ -157,14 +131,9 @@ html[data-yci-mentions] yt-live-chat-text-message-renderer .yci-mention {
   font-weight: 600 !important;
 }
 
-/* Author colors off: YouTube-like defaults (non-sub neutral, sub green).
-   The member rule below has higher specificity so it wins over the first. */
+/* Author colors off: use the same neutral color for every role. */
 html[data-yci-no-colors] yt-live-chat-text-message-renderer #author-name {
   color: var(--yci-default-name) !important;
-}
-
-html[data-yci-no-colors] yt-live-chat-text-message-renderer[author-type='member'] #author-name {
-  color: var(--yci-default-sub) !important;
 }
 
 /* No colon — just a gap between the name+badges chip and the message. */

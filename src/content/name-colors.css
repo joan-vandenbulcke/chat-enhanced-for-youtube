@@ -1,0 +1,133 @@
+/*
+ * Tailwind CSS default color palette: 18 families, shades 300 through 700.
+ * Source: https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css
+ * Tailwind CSS is licensed under the MIT License.
+ */
+
+/* red */
+.yt-name-color-red-300 { --yt-name-color: oklch(80.8% 0.114 19.571); }
+.yt-name-color-red-400 { --yt-name-color: oklch(70.4% 0.191 22.216); }
+.yt-name-color-red-500 { --yt-name-color: oklch(63.7% 0.237 25.331); }
+.yt-name-color-red-600 { --yt-name-color: oklch(57.7% 0.245 27.325); }
+.yt-name-color-red-700 { --yt-name-color: oklch(50.5% 0.213 27.518); }
+
+/* orange */
+.yt-name-color-orange-300 { --yt-name-color: oklch(83.7% 0.128 66.29); }
+.yt-name-color-orange-400 { --yt-name-color: oklch(75% 0.183 55.934); }
+.yt-name-color-orange-500 { --yt-name-color: oklch(70.5% 0.213 47.604); }
+.yt-name-color-orange-600 { --yt-name-color: oklch(64.6% 0.222 41.116); }
+.yt-name-color-orange-700 { --yt-name-color: oklch(55.3% 0.195 38.402); }
+
+/* amber */
+.yt-name-color-amber-300 { --yt-name-color: oklch(87.9% 0.169 91.605); }
+.yt-name-color-amber-400 { --yt-name-color: oklch(82.8% 0.189 84.429); }
+.yt-name-color-amber-500 { --yt-name-color: oklch(76.9% 0.188 70.08); }
+.yt-name-color-amber-600 { --yt-name-color: oklch(66.6% 0.179 58.318); }
+.yt-name-color-amber-700 { --yt-name-color: oklch(55.5% 0.163 48.998); }
+
+/* yellow */
+.yt-name-color-yellow-300 { --yt-name-color: oklch(90.5% 0.182 98.111); }
+.yt-name-color-yellow-400 { --yt-name-color: oklch(85.2% 0.199 91.936); }
+.yt-name-color-yellow-500 { --yt-name-color: oklch(79.5% 0.184 86.047); }
+.yt-name-color-yellow-600 { --yt-name-color: oklch(68.1% 0.162 75.834); }
+.yt-name-color-yellow-700 { --yt-name-color: oklch(55.4% 0.135 66.442); }
+
+/* lime */
+.yt-name-color-lime-300 { --yt-name-color: oklch(89.7% 0.196 126.665); }
+.yt-name-color-lime-400 { --yt-name-color: oklch(84.1% 0.238 128.85); }
+.yt-name-color-lime-500 { --yt-name-color: oklch(76.8% 0.233 130.85); }
+.yt-name-color-lime-600 { --yt-name-color: oklch(64.8% 0.2 131.684); }
+.yt-name-color-lime-700 { --yt-name-color: oklch(53.2% 0.157 131.589); }
+
+/* green */
+.yt-name-color-green-300 { --yt-name-color: oklch(87.1% 0.15 154.449); }
+.yt-name-color-green-400 { --yt-name-color: oklch(79.2% 0.209 151.711); }
+.yt-name-color-green-500 { --yt-name-color: oklch(72.3% 0.219 149.579); }
+.yt-name-color-green-600 { --yt-name-color: oklch(62.7% 0.194 149.214); }
+.yt-name-color-green-700 { --yt-name-color: oklch(52.7% 0.154 150.069); }
+
+/* emerald */
+.yt-name-color-emerald-300 { --yt-name-color: oklch(84.5% 0.143 164.978); }
+.yt-name-color-emerald-400 { --yt-name-color: oklch(76.5% 0.177 163.223); }
+.yt-name-color-emerald-500 { --yt-name-color: oklch(69.6% 0.17 162.48); }
+.yt-name-color-emerald-600 { --yt-name-color: oklch(59.6% 0.145 163.225); }
+.yt-name-color-emerald-700 { --yt-name-color: oklch(50.8% 0.118 165.612); }
+
+/* teal */
+.yt-name-color-teal-300 { --yt-name-color: oklch(85.5% 0.138 181.071); }
+.yt-name-color-teal-400 { --yt-name-color: oklch(77.7% 0.152 181.912); }
+.yt-name-color-teal-500 { --yt-name-color: oklch(70.4% 0.14 182.503); }
+.yt-name-color-teal-600 { --yt-name-color: oklch(60% 0.118 184.704); }
+.yt-name-color-teal-700 { --yt-name-color: oklch(51.1% 0.096 186.391); }
+
+/* cyan */
+.yt-name-color-cyan-300 { --yt-name-color: oklch(86.5% 0.127 207.078); }
+.yt-name-color-cyan-400 { --yt-name-color: oklch(78.9% 0.154 211.53); }
+.yt-name-color-cyan-500 { --yt-name-color: oklch(71.5% 0.143 215.221); }
+.yt-name-color-cyan-600 { --yt-name-color: oklch(60.9% 0.126 221.723); }
+.yt-name-color-cyan-700 { --yt-name-color: oklch(52% 0.105 223.128); }
+
+/* sky */
+.yt-name-color-sky-300 { --yt-name-color: oklch(82.8% 0.111 230.318); }
+.yt-name-color-sky-400 { --yt-name-color: oklch(74.6% 0.16 232.661); }
+.yt-name-color-sky-500 { --yt-name-color: oklch(68.5% 0.169 237.323); }
+.yt-name-color-sky-600 { --yt-name-color: oklch(58.8% 0.158 241.966); }
+.yt-name-color-sky-700 { --yt-name-color: oklch(50% 0.134 242.749); }
+
+/* blue */
+.yt-name-color-blue-300 { --yt-name-color: oklch(80.9% 0.105 251.813); }
+.yt-name-color-blue-400 { --yt-name-color: oklch(70.7% 0.165 254.624); }
+.yt-name-color-blue-500 { --yt-name-color: oklch(62.3% 0.214 259.815); }
+.yt-name-color-blue-600 { --yt-name-color: oklch(54.6% 0.245 262.881); }
+.yt-name-color-blue-700 { --yt-name-color: oklch(48.8% 0.243 264.376); }
+
+/* indigo */
+.yt-name-color-indigo-300 { --yt-name-color: oklch(78.5% 0.115 274.713); }
+.yt-name-color-indigo-400 { --yt-name-color: oklch(67.3% 0.182 276.935); }
+.yt-name-color-indigo-500 { --yt-name-color: oklch(58.5% 0.233 277.117); }
+.yt-name-color-indigo-600 { --yt-name-color: oklch(51.1% 0.262 276.966); }
+.yt-name-color-indigo-700 { --yt-name-color: oklch(45.7% 0.24 277.023); }
+
+/* violet */
+.yt-name-color-violet-300 { --yt-name-color: oklch(81.1% 0.111 293.571); }
+.yt-name-color-violet-400 { --yt-name-color: oklch(70.2% 0.183 293.541); }
+.yt-name-color-violet-500 { --yt-name-color: oklch(60.6% 0.25 292.717); }
+.yt-name-color-violet-600 { --yt-name-color: oklch(54.1% 0.281 293.009); }
+.yt-name-color-violet-700 { --yt-name-color: oklch(49.1% 0.27 292.581); }
+
+/* purple */
+.yt-name-color-purple-300 { --yt-name-color: oklch(82.7% 0.119 306.383); }
+.yt-name-color-purple-400 { --yt-name-color: oklch(71.4% 0.203 305.504); }
+.yt-name-color-purple-500 { --yt-name-color: oklch(62.7% 0.265 303.9); }
+.yt-name-color-purple-600 { --yt-name-color: oklch(55.8% 0.288 302.321); }
+.yt-name-color-purple-700 { --yt-name-color: oklch(49.6% 0.265 301.924); }
+
+/* fuchsia */
+.yt-name-color-fuchsia-300 { --yt-name-color: oklch(83.3% 0.145 321.434); }
+.yt-name-color-fuchsia-400 { --yt-name-color: oklch(74% 0.238 322.16); }
+.yt-name-color-fuchsia-500 { --yt-name-color: oklch(66.7% 0.295 322.15); }
+.yt-name-color-fuchsia-600 { --yt-name-color: oklch(59.1% 0.293 322.896); }
+.yt-name-color-fuchsia-700 { --yt-name-color: oklch(51.8% 0.253 323.949); }
+
+/* pink */
+.yt-name-color-pink-300 { --yt-name-color: oklch(82.3% 0.12 346.018); }
+.yt-name-color-pink-400 { --yt-name-color: oklch(71.8% 0.202 349.761); }
+.yt-name-color-pink-500 { --yt-name-color: oklch(65.6% 0.241 354.308); }
+.yt-name-color-pink-600 { --yt-name-color: oklch(59.2% 0.249 0.584); }
+.yt-name-color-pink-700 { --yt-name-color: oklch(52.5% 0.223 3.958); }
+
+/* rose */
+.yt-name-color-rose-300 { --yt-name-color: oklch(81% 0.117 11.638); }
+.yt-name-color-rose-400 { --yt-name-color: oklch(71.2% 0.194 13.428); }
+.yt-name-color-rose-500 { --yt-name-color: oklch(64.5% 0.246 16.439); }
+.yt-name-color-rose-600 { --yt-name-color: oklch(58.6% 0.253 17.585); }
+.yt-name-color-rose-700 { --yt-name-color: oklch(51.4% 0.222 16.935); }
+
+/* slate */
+.yt-name-color-slate-300 { --yt-name-color: oklch(86.9% 0.022 252.894); }
+.yt-name-color-slate-400 { --yt-name-color: oklch(70.4% 0.04 256.788); }
+.yt-name-color-slate-500 { --yt-name-color: oklch(55.4% 0.046 257.417); }
+.yt-name-color-slate-600 { --yt-name-color: oklch(44.6% 0.043 257.281); }
+.yt-name-color-slate-700 { --yt-name-color: oklch(37.2% 0.044 257.287); }
+
+

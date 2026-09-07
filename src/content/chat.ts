@@ -1,9 +1,8 @@
 /*
  * Chat Enhanced for YouTube — the only thing CSS can't do: per-author coloring.
  *
- * We hash each author's name to a stable hue and expose it as the
- * `--yci-author-hue` custom property on the message element. chat.css does the
- * actual painting. We re-apply to affected renderers when YouTube adds or
+ * We assign each author an unused class from the Tailwind CSS color palette.
+ * We re-apply it when YouTube adds or
  * recycles chat DOM nodes (a node that showed user A may be reused for user B).
  *
  * It also mirrors the user's settings (from the popup) onto <html> so chat.css
@@ -12,9 +11,11 @@
 
 import { applyToRoot, getSettings, type MentionMode } from '../settings'
 import chatCss from './chat.css?inline'
+import nameColorsCss from './name-colors.css?inline'
 
 const STYLE_ID = 'yci-styles'
 const COLORED = 'yci-colored'
+const COLOR_CLASS = 'yci-color-class'
 const MESSAGE_SELECTOR = 'yt-live-chat-text-message-renderer'
 const INPUT_AUTHOR_SELECTOR = 'yt-live-chat-message-input-renderer #author-name'
 
@@ -25,7 +26,7 @@ function setStylesEnabled(enabled: boolean): void {
     if (existing) return
     const style = document.createElement('style')
     style.id = STYLE_ID
-    style.textContent = chatCss
+    style.textContent = `${chatCss}\n${nameColorsCss}`
     document.documentElement.appendChild(style)
   } else {
     existing?.remove()
@@ -42,16 +43,57 @@ const ROW = 'yci-row'
 // (which position-based CSS :nth-child would do, causing a visible shimmer).
 let rowCounter = 0
 
-/** Deterministic name -> hue (0-359) via FNV-1a hash for good spread.
- * Only the hue is decided here; chat.css applies theme-aware saturation and
- * lightness so names stay legible in both light and dark mode. */
-function hueForAuthor(name: string): number {
-  let hash = 0x811c9dc5
-  for (let i = 0; i < name.length; i++) {
-    hash ^= name.charCodeAt(i)
-    hash = Math.imul(hash, 0x01000193)
+const COLOR_FAMILIES = [
+  'red',
+  'orange',
+  'amber',
+  'yellow',
+  'lime',
+  'green',
+  'emerald',
+  'teal',
+  'cyan',
+  'sky',
+  'blue',
+  'indigo',
+  'violet',
+  'purple',
+  'fuchsia',
+  'pink',
+  'rose',
+  'slate',
+] as const
+const COLOR_SHADES = [300, 400, 500, 600, 700] as const
+
+function shuffled<T>(values: readonly T[]): T[] {
+  const result = [...values]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
   }
-  return (hash >>> 0) % 360
+  return result
+}
+
+// A Latin-square order guarantees every family once and spreads all five
+// shades across each block of 18 authors. Both axes shuffle on every reload.
+const shuffledFamilies = shuffled(COLOR_FAMILIES)
+const shuffledShades = shuffled(COLOR_SHADES)
+const colorClasses = COLOR_SHADES.flatMap((_, round) =>
+  shuffledFamilies.map(
+    (family, familyIndex) =>
+      `yt-name-color-${family}-${shuffledShades[(familyIndex + round) % shuffledShades.length]}`,
+  ),
+)
+const authorColors = new Map<string, string>()
+let paletteCursor = 0
+
+function colorClassForAuthor(name: string): string {
+  const existing = authorColors.get(name)
+  if (existing) return existing
+
+  const colorClass = colorClasses[paletteCursor++ % colorClasses.length]
+  authorColors.set(name, colorClass)
+  return colorClass
 }
 
 // Updated from settings; controls the (DOM-mutating) mention wrapping. The
@@ -85,7 +127,11 @@ function refreshMessage(message: Element): void {
   if (!name) return
 
   if (message.getAttribute(COLORED) !== name) {
-    ;(message as HTMLElement).style.setProperty('--yci-author-hue', String(hueForAuthor(name)))
+    const previousColorClass = message.getAttribute(COLOR_CLASS)
+    if (previousColorClass) message.classList.remove(previousColorClass)
+    const colorClass = colorClassForAuthor(name)
+    message.classList.add(colorClass)
+    message.setAttribute(COLOR_CLASS, colorClass)
     message.setAttribute(COLORED, name)
 
     // A changed author means YouTube created or recycled this renderer.
